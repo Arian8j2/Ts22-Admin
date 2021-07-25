@@ -22,7 +22,7 @@ const char* ts3plugin_version(){
 }
 
 int ts3plugin_apiVersion() {
-	return PLUGIN_API_VERSION;
+    return PLUGIN_API_VERSION;
 }
 
 const char* ts3plugin_author(){
@@ -42,30 +42,30 @@ int ts3plugin_init(){
 }
 
 void ts3plugin_shutdown(){
-  	if (g_pPluginID) {
-		free(g_pPluginID);
-		g_pPluginID = NULL;
-	}
+    if (g_pPluginID) {
+        free(g_pPluginID);
+        g_pPluginID = NULL;
+    }
 }
 
 void ts3plugin_registerPluginID(const char* id){
-	const size_t sz = strlen(id) + 1;
-	g_pPluginID = (char*)malloc(sz * sizeof(char));
-	strncpy(g_pPluginID, id, sz);
+    const size_t sz = strlen(id) + 1;
+    g_pPluginID = (char*)malloc(sz * sizeof(char));
+    strncpy(g_pPluginID, id, sz);
 }
 
 void ts3plugin_freeMemory(void* data) {
-	free(data);
+    free(data);
 }
 
 /* Helper function to create a menu item */
 static struct PluginMenuItem* createMenuItem(enum PluginMenuType type, int id, const char* text, const char* icon) {
-	struct PluginMenuItem* menuItem = (struct PluginMenuItem*)malloc(sizeof(struct PluginMenuItem));
-	menuItem->type = type;
-	menuItem->id = id;
-	strncpy(menuItem->text, text, PLUGIN_MENU_BUFSZ);
-	strncpy(menuItem->icon, icon, PLUGIN_MENU_BUFSZ);
-	return menuItem;
+    struct PluginMenuItem* menuItem = (struct PluginMenuItem*)malloc(sizeof(struct PluginMenuItem));
+    menuItem->type = type;
+    menuItem->id = id;
+    strncpy(menuItem->text, text, PLUGIN_MENU_BUFSZ);
+    strncpy(menuItem->icon, icon, PLUGIN_MENU_BUFSZ);
+    return menuItem;
 }
 
 #define BEGIN_CREATE_MENUS(x) const size_t sz = x + 1; size_t n = 0; *menuItems = (struct PluginMenuItem**)malloc(sizeof(struct PluginMenuItem*) * sz);
@@ -74,9 +74,9 @@ static struct PluginMenuItem* createMenuItem(enum PluginMenuType type, int id, c
 
 void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon){
     BEGIN_CREATE_MENUS(2);
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_MOVE_THERE, "Move Clients There", "right.png");
-	CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_MOVE_HERE, "Move Clients To My Channel", "left.png");
-	END_CREATE_MENUS;
+    CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_MOVE_THERE, "Move Clients There", "right.png");
+    CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_MOVE_HERE, "Move Clients To My Channel", "left.png");
+    END_CREATE_MENUS;
 
     *menuIcon = NULL;
 }
