@@ -1,20 +1,24 @@
+#define __USE_MINGW_ANSI_STDIO 1
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <teamspeak/public_definitions.h>
+#include <teamspeak/public_rare_definitions.h>
 #include <ts3_functions.h>
 
 #include "plugin.h"
 
 #define PLUGIN_API_VERSION 23
+#define INFODATA_BUFSIZE 128
 
 TS3Functions g_Ts3Functions;
 char* g_pPluginID;
 
 // required functions
 const char* ts3plugin_name(){
-    return "Ts22 admin plugin";
+    return "Ts22 Admin";
 }
 
 const char* ts3plugin_version(){
@@ -111,6 +115,39 @@ void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenu
 
         case MENU_ID_MOVE_HERE:{
             MoveClients(serverConnectionHandlerID, selectedItemID, Cid);
+            break;
+        }
+    }
+}
+
+const char* ts3plugin_infoTitle() {
+	return "Ts22 Admin";
+}
+
+void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum PluginItemType type, char** data){
+    *data = (char*)malloc(INFODATA_BUFSIZE * sizeof(char));
+    switch(type){
+        case PLUGIN_CLIENT:{
+            int Cldbid;
+            g_Ts3Functions.getClientVariableAsInt(
+                serverConnectionHandlerID,
+                id, CLIENT_DATABASE_ID,
+                &Cldbid
+            );
+
+            snprintf(*data, INFODATA_BUFSIZE,
+                "Client ID --> [b]%llu[/b]\nClient DB ID --> [b]%d[/b]", id, Cldbid);
+
+            break;
+        }
+
+        case PLUGIN_CHANNEL:{
+            snprintf(*data, INFODATA_BUFSIZE, "Channel ID --> [b]%llu[/b]", id);
+            break;
+        }
+
+        case PLUGIN_SERVER:{
+            *data = NULL;
             break;
         }
     }

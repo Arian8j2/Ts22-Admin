@@ -26,10 +26,13 @@ PLUGINS_EXPORTDLL int ts3plugin_init();
 PLUGINS_EXPORTDLL void ts3plugin_shutdown();
 
 PLUGINS_EXPORTDLL void ts3plugin_registerPluginID(const char* id);
+PLUGINS_EXPORTDLL const char* ts3plugin_infoTitle();
 PLUGINS_EXPORTDLL void ts3plugin_freeMemory(void* data);
 
 PLUGINS_EXPORTDLL void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon);
 PLUGINS_EXPORTDLL void ts3plugin_onMenuItemEvent(uint64 serverConnectionHandlerID, enum PluginMenuType type, int menuItemID, uint64 selectedItemID);
+
+PLUGINS_EXPORTDLL void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum PluginItemType type, char** data);
 
 #ifdef __cplusplus
 }
