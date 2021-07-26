@@ -82,7 +82,8 @@ void ts3plugin_initMenus(struct PluginMenuItem*** menuItems, char** menuIcon){
     CREATE_MENU_ITEM(PLUGIN_MENU_TYPE_CHANNEL, MENU_ID_MOVE_HERE, "Move Clients To My Channel", "left.png");
     END_CREATE_MENUS;
 
-    *menuIcon = NULL;
+    *menuIcon = (char*)malloc(PLUGIN_MENU_BUFSZ * sizeof(char));
+    strncpy(*menuIcon, "logo.png", PLUGIN_MENU_BUFSZ);
 }
 
 static void MoveClients(uint64& serverConnectionHandlerID, uint64& SourceChannel, uint64& DstChannel){
