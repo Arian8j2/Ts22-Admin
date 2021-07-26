@@ -148,7 +148,31 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
         }
 
         case PLUGIN_SERVER:{
-            *data = NULL;
+            unsigned char aVariables[] = {
+                CLIENT_IS_CHANNEL_COMMANDER,
+                CLIENT_TYPE
+            };
+            unsigned int aResults[sizeof(aVariables)/sizeof(char)];
+            
+            anyID* pClientList;
+            g_Ts3Functions.getClientList(serverConnectionHandlerID, &pClientList);
+
+            for(anyID* pClient = pClientList; *pClient != NULL; pClient++){
+                for(int i=0; i < static_cast<int>(sizeof(aVariables)/sizeof(char)); i++){
+                    int Buffer;
+                    g_Ts3Functions.getClientVariableAsInt(
+                        serverConnectionHandlerID,
+                        *pClient, aVariables[i],
+                        &Buffer
+                    );
+
+                    if(Buffer == 1)
+                        aResults[i]++;
+                }
+            }
+
+            snprintf(*data, INFODATA_BUFSIZE,
+                "Commander clients --> [b]%u[/b]\nServer queries --> [b]%u[/b]", aResults[0], aResults[1]);
             break;
         }
     }
