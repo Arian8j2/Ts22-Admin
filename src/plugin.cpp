@@ -6,6 +6,7 @@
 
 #include <teamspeak/public_definitions.h>
 #include <teamspeak/public_rare_definitions.h>
+#include <teamspeak/public_errors.h>
 #include <ts3_functions.h>
 
 #include "plugin.h"
@@ -90,7 +91,7 @@ static void MoveClients(uint64& serverConnectionHandlerID, uint64& SourceChannel
     anyID* pClientList;
     g_Ts3Functions.getChannelClientList(serverConnectionHandlerID, SourceChannel, &pClientList);
 
-    for(anyID* pClient = pClientList; *pClient != NULL; pClient++){
+    for(anyID* pClient = pClientList; *pClient != 0; pClient++){
         g_Ts3Functions.requestClientMove(
             serverConnectionHandlerID,
             *pClient,
@@ -152,19 +153,24 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
                 CLIENT_IS_CHANNEL_COMMANDER,
                 CLIENT_TYPE
             };
-            unsigned int aResults[sizeof(aVariables)/sizeof(char)];
+            unsigned int aResults[sizeof(aVariables)/sizeof(char)] = {0};
             
             anyID* pClientList;
             g_Ts3Functions.getClientList(serverConnectionHandlerID, &pClientList);
 
-            for(anyID* pClient = pClientList; *pClient != NULL; pClient++){
+            for(anyID* pClient = pClientList; *pClient != 0; pClient++){
                 for(int i=0; i < static_cast<int>(sizeof(aVariables)/sizeof(char)); i++){
                     int Buffer;
-                    g_Ts3Functions.getClientVariableAsInt(
+                    unsigned int Error = g_Ts3Functions.getClientVariableAsInt(
                         serverConnectionHandlerID,
                         *pClient, aVariables[i],
                         &Buffer
                     );
+
+                    if(Error != ERROR_ok){
+                        data = NULL;
+                        return;
+                    }
 
                     if(Buffer == 1)
                         aResults[i]++;
@@ -175,5 +181,9 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
                 "Commander clients --> [b]%u[/b]\nServer queries --> [b]%u[/b]", aResults[0], aResults[1]);
             break;
         }
+
+        default:
+			data = NULL;
+			return;
     }
 }
