@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.10.2)
 project(Ts22_Admin)
 
 option(TS3_INSTALLER "create teamspeak 3 plugin installer" ON)
@@ -29,17 +29,21 @@ if(TS3_INSTALLER)
     copy(${CMAKE_BINARY_DIR}/${PROJECT_NAME}${LIB_SUFFIX} plugins/${PROJECT_NAME}${LIB_SUFFIX} copy)
 
 
-    set(INSTALLER_FILES "plugins" "package.ini")
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD COMMAND
-        ${CMAKE_COMMAND} -E tar "cfv" "${PROJECT_NAME}.ts3_plugin" --format=zip ${INSTALLER_FILES}
+        ${CMAKE_COMMAND} -E tar "cfv" "${PROJECT_NAME}.ts3_plugin" --format=zip "plugins" "package.ini"
         WORKING_DIRECTORY ${RELEASE_PATH}
         COMMENT "Creating teamspeak3 installer ..."
     )
 
-    add_custom_command(
-        TARGET ${PROJECT_NAME} POST_BUILD COMMAND
-        ${CMAKE_COMMAND} -E rm "-rf" ${INSTALLER_FILES}
-        WORKING_DIRECTORY ${RELEASE_PATH}
-    )
+    function(remove files command)
+        add_custom_command(
+            TARGET ${PROJECT_NAME} POST_BUILD COMMAND
+            ${CMAKE_COMMAND} -E ${command} ${files}
+            WORKING_DIRECTORY ${RELEASE_PATH}
+        )
+    endfunction()
+
+    remove(plugins remove_directory)
+    remove(package.ini remove)
 endif()
