@@ -31,7 +31,7 @@ int ts3plugin_apiVersion() {
 }
 
 const char* ts3plugin_author(){
-    return "AriaN";
+    return "NotAriaN";
 }
 
 const char* ts3plugin_description(){
