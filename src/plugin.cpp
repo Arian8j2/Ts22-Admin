@@ -11,7 +11,7 @@
 
 #include "plugin.h"
 
-#define PLUGIN_API_VERSION 23
+#define PLUGIN_API_VERSION 26
 #define INFODATA_BUFSIZE 128
 
 TS3Functions g_Ts3Functions;
@@ -39,7 +39,7 @@ const char* ts3plugin_description(){
 }
 
 void ts3plugin_setFunctionPointers(const struct TS3Functions funcs){
-    g_Ts3Functions = funcs;    
+    g_Ts3Functions = funcs;
 }
 
 int ts3plugin_init(){
@@ -154,7 +154,7 @@ void ts3plugin_infoData(uint64 serverConnectionHandlerID, uint64 id, enum Plugin
                 CLIENT_TYPE
             };
             unsigned int aResults[sizeof(aVariables)/sizeof(char)] = {0};
-            
+
             anyID* pClientList;
             g_Ts3Functions.getClientList(serverConnectionHandlerID, &pClientList);
 
